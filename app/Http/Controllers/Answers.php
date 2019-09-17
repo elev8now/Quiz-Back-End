@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\AnswerRequest;
+use App\Http\Requests\AnswerRequest;
 use App\Question;
 use App\Answer;
 use App\Http\Resources\AnswerResource;
@@ -16,7 +16,7 @@ class Answers extends Controller
     public function index(Question $question)
     {
         // return a list of answers for a specific question
-        return AnswerResource::collection($question->answers)
+        return AnswerResource::collection($question->answers);
     }
 
     /**

@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\QuestionRequest;
+use App\Http\Requests\QuestionRequest;
 use App\Question;
 use App\Http\Resources\QuestionResource;
+use App\Http\Resources\AnswerResource;
+use App\Http\Resources\QuestionListResource;
 
 class Questions extends Controller
 {
@@ -14,7 +16,7 @@ class Questions extends Controller
      */
     public function index()
     {
-        return Question::all();
+        return QuestionListResource::collection(Question::all());
     }
 
     /**
@@ -44,7 +46,11 @@ class Questions extends Controller
      */
     public function show(Question $question)
     {
-        return new QuestionResource($question);
+        // return new QuestionResource($question);
+        return [
+            "question" => new QuestionResource($question),
+            "answers" => AnswerResource::collection($question->answers)
+        ];
     }
 
     /**
