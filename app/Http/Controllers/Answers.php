@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
+use Illuminate\Http\AnswerRequest;
+use App\Question;
+use App\Answer;
+use App\Http\Resources\AnswerResource;
 
 class Answers extends Controller
 {
@@ -11,9 +13,10 @@ class Answers extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Question $question)
     {
-        //
+        // return a list of answers for a specific question
+        return AnswerResource::collection($question->answers)
     }
 
     /**
@@ -22,9 +25,14 @@ class Answers extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AnswerRequest $request, Question $question)
     {
-        //
+        $answer = new Answer($request->only(["answer", "correct"]));
+
+        // store the comments on the article
+        $question->answers()->save($answer);
+
+        return new AnswerResource($answer);
     }
 
     /**
@@ -45,9 +53,14 @@ class Answers extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AnswerRequest $request, Answer $answer)
     {
-        //
+        // get the request data
+        $data = $request->only(["answer", "correct"]);
+        // update the comment
+        $answer->fill($data)->save();
+        // return the updated resource
+        return new AnswerResource($answer);
     }
 
     /**
@@ -56,8 +69,10 @@ class Answers extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Answer $answer)
     {
-        //
+        $answer->delete();
+        // use a 204 code as there is no content in the response
+        return response(null, 204);
     }
 }

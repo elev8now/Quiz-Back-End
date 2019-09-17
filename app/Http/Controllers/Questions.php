@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+use Illuminate\Http\QuestionRequest;
 use App\Question;
+use App\Http\Resources\QuestionResource;
 
 class Questions extends Controller
 {
@@ -22,7 +23,7 @@ class Questions extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(QuestionRequest $request)
     {
         // get post request data for question, category and level
         $data = $request->only(["question", "category", "level"]);
@@ -31,7 +32,7 @@ class Questions extends Controller
         $question = Question::create($data);
 
         // return the question along with a 201 status code
-        return response($question, 201);
+        return new QuestionResource($question);
     }
 
 
@@ -41,9 +42,9 @@ class Questions extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Question $question)
     {
-        return Question::find($id);
+        return new QuestionResource($question);
     }
 
     /**
@@ -53,11 +54,8 @@ class Questions extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(QuestionRequest $request, Question $question)
     {
-        // find the current question
-        $question = Question::find($id);
-
         // get the request data
         $data = $request->only(["question", "category", "level"]);
 
@@ -65,7 +63,7 @@ class Questions extends Controller
         $question->fill($data)->save();
 
         // return the updated version
-        return $question;
+        return new QuestionResource($question);
     }
 
 
@@ -75,9 +73,8 @@ class Questions extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Question $question)
     {
-        $question = Question::find($id);
         $question->delete();
 
         // use a 204 code as there is no content in the response

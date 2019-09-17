@@ -32,7 +32,7 @@ $router->group(["prefix" => "questions"], function ($router) {
     // add a new answer to a question
     $router->post("{question}/answers", "Answers@store");
     // get all answers to a question
-    $router->get("{question}/answers", "Answers@questionIndex");
+    $router->get("{question}/answers", "Answers@index");
 });
 
 $router->group(["prefix" => "answers"], function ($router) {
