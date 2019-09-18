@@ -5,6 +5,7 @@ use App\Http\Requests\AnswerRequest;
 use App\Question;
 use App\Answer;
 use App\Http\Resources\AnswerResource;
+use App\Http\Resources\AnswerCheckResource;
 
 class Answers extends Controller
 {
@@ -41,9 +42,9 @@ class Answers extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Answer $answer)
     {
-        //
+        return new AnswerCheckResource($answer);
     }
 
     /**

@@ -37,7 +37,7 @@ $router->group(["prefix" => "questions"], function ($router) {
 
 $router->group(["prefix" => "answers"], function ($router) {
     // get a specific answer by id
-    // {question} is a url parameter representing the id we want
+    // {answer} is a url parameter representing the id we want
     $router->get("{answer}", "Answers@show");
     // edit a specific answer by id
     $router->put("{answer}", "Answers@update")->middleware('auth:api');
